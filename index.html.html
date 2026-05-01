@@ -1,0 +1,929 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>What's Your Avurudu Personality? | ERABADU 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --emerald: #0D3B2E;
+  --emerald-mid: #1A5C40;
+  --gold: #C9973A;
+  --gold-bright: #F0C060;
+  --crimson: #A8161E;
+  --cream: #FFF9ED;
+  --terracotta: #C4654A;
+  --sun: #F4870A;
+  --amber: #FFBF47;
+  --blush: #F7C5B0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; min-height: 100%;
+  font-family: 'Raleway', sans-serif;
+  background: #FFF1D6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE LAYER ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.5;
+}
+
+/* ── ANIMATED BG ── */
+#bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(160deg, #FFECB3 0%, #FFD07A 40%, #FF9B3A 75%, #D45A2A 100%);
+  overflow: hidden;
+}
+.sun-bg {
+  position: absolute;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, #FFFDE7 0%, #FFE082 40%, #FF8F00 70%, transparent 100%);
+  top: -60px; left: 50%; transform: translateX(-50%);
+  filter: blur(4px);
+  box-shadow: 0 0 100px 50px rgba(255,200,60,0.3);
+  animation: sunPulse 5s ease-in-out infinite;
+}
+@keyframes sunPulse {
+  0%,100%{transform:translateX(-50%) scale(1);opacity:0.85}
+  50%{transform:translateX(-50%) scale(1.08);opacity:1}
+}
+.cloud {
+  position: absolute; border-radius: 60px;
+  background: rgba(255,255,255,0.15); filter: blur(10px);
+  animation: drift linear infinite;
+}
+@keyframes drift { from{transform:translateX(-300px)} to{transform:translateX(110vw)} }
+.hills-svg { position: absolute; bottom: 0; width: 100%; }
+
+/* ── WRAPPER ── */
+#app {
+  position: relative; z-index: 10;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  padding: 0 0 60px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  width: 100%; text-align: center;
+  padding: 28px 20px 18px;
+  background: linear-gradient(to bottom, rgba(13,59,46,0.9), transparent);
+}
+.site-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(15px, 3.5vw, 22px);
+  color: var(--gold-bright);
+  letter-spacing: 6px;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.4);
+}
+.site-sub {
+  font-size: 9px; letter-spacing: 4px; font-weight: 700;
+  color: rgba(255,220,100,0.7); text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* ── SCREEN SYSTEM ── */
+.screen {
+  display: none; width: 100%; max-width: 620px;
+  padding: 0 16px;
+  animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+}
+.screen.visible { display: flex; flex-direction: column; align-items: center; }
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── INTRO SCREEN ── */
+.intro-badge {
+  margin: 30px auto 0;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 10px 22px;
+  font-size: 10px; font-weight: 800; letter-spacing: 4px;
+  color: var(--emerald); text-transform: uppercase;
+}
+.intro-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(22px, 6vw, 38px);
+  color: var(--emerald);
+  text-align: center;
+  line-height: 1.2;
+  margin: 18px 0 10px;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.4);
+}
+.intro-title span { color: var(--crimson); }
+.intro-sub {
+  font-size: 14px; color: rgba(13,59,46,0.75);
+  text-align: center; line-height: 1.7;
+  font-style: italic;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 24px;
+  max-width: 420px;
+}
+
+/* Character preview strip */
+.char-strip {
+  display: flex; gap: 10px; justify-content: center;
+  flex-wrap: wrap; margin: 10px 0 28px;
+}
+.char-preview {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 16px;
+  padding: 12px 10px 8px;
+  width: 90px;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: default;
+}
+.char-preview:hover { transform: translateY(-5px) scale(1.04); }
+.char-emoji { font-size: 32px; line-height: 1; }
+.char-name-mini {
+  font-size: 8px; font-weight: 800; letter-spacing: 1px;
+  color: var(--emerald); text-align: center; text-transform: uppercase;
+}
+
+/* Gender select */
+.gender-row {
+  display: flex; gap: 14px; margin-bottom: 22px; justify-content: center;
+}
+.gender-btn {
+  flex: 1; max-width: 180px;
+  padding: 16px 10px;
+  border: 2px solid rgba(13,59,46,0.25);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+  border-radius: 16px; cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 800; font-size: 13px; letter-spacing: 2px;
+  color: var(--emerald); text-align: center;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  text-transform: uppercase;
+}
+.gender-btn .g-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+.gender-btn:hover { border-color: var(--gold); background: rgba(255,215,80,0.2); transform: translateY(-3px); }
+.gender-btn.selected { background: var(--emerald); color: var(--gold-bright); border-color: var(--emerald); transform: scale(1.04); }
+
+.btn-start {
+  padding: 18px 52px;
+  background: linear-gradient(135deg, var(--crimson), #7B0F15);
+  color: white; border: none; border-radius: 50px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 13px; letter-spacing: 3px; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(168,22,30,0.4);
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative; overflow: hidden;
+}
+.btn-start::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+}
+.btn-start:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 16px 40px rgba(168,22,30,0.5); }
+.btn-start:active { transform: scale(0.97); }
+
+/* ── QUIZ SCREEN ── */
+.quiz-card {
+  width: 100%;
+  background: rgba(255,252,240,0.85);
+  backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(201,151,58,0.3);
+  border-radius: 28px;
+  padding: 30px 24px;
+  box-shadow: 0 25px 60px rgba(10,30,20,0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
+  margin-top: 20px;
+}
+
+.q-progress {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.q-counter {
+  font-size: 10px; font-weight: 800; letter-spacing: 3px;
+  color: var(--terracotta); text-transform: uppercase;
+}
+.q-bar-outer {
+  flex: 1; height: 5px; background: rgba(0,0,0,0.08);
+  border-radius: 10px; margin: 0 14px; overflow: hidden;
+}
+.q-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  border-radius: 10px;
+  transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 0 6px var(--gold-bright);
+}
+
+.q-icon { font-size: 42px; text-align: center; margin-bottom: 12px; animation: bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes bounceIn { from{transform:scale(0.4) rotate(-10deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
+
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 3.5vw, 21px);
+  color: var(--emerald); text-align: center;
+  line-height: 1.45; margin-bottom: 24px;
+  font-weight: 700;
+}
+
+.answers-grid {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ans-btn {
+  width: 100%; padding: 14px 18px;
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(13,59,46,0.18);
+  border-radius: 14px; cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--emerald); text-align: left;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex; align-items: center; gap: 12px;
+}
+.ans-btn .ans-emoji { font-size: 20px; flex-shrink: 0; }
+.ans-btn:hover {
+  border-color: var(--gold);
+  background: rgba(255,210,70,0.18);
+  transform: translateX(4px);
+}
+.ans-btn.chosen {
+  background: var(--emerald); color: var(--gold-bright);
+  border-color: var(--emerald);
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(13,59,46,0.3);
+}
+
+/* ── RESULT SCREEN ── */
+.result-wrap { width: 100%; margin-top: 18px; }
+
+.result-card {
+  width: 100%; border-radius: 28px; overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+  position: relative;
+}
+.result-banner {
+  padding: 36px 24px 24px;
+  text-align: center; position: relative;
+}
+.result-emoji-big {
+  font-size: 80px; line-height: 1;
+  display: block; margin-bottom: 10px;
+  animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+@keyframes popIn {
+  from{transform:scale(0) rotate(-20deg);opacity:0}
+  to{transform:scale(1) rotate(0deg);opacity:1}
+}
+.result-archetype {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(11px, 3vw, 15px);
+  letter-spacing: 4px;
+  opacity: 0.8;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.result-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(22px, 6vw, 36px);
+  line-height: 1.1;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.result-title-sinhala {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(13px, 3vw, 17px);
+  font-style: italic;
+  opacity: 0.75;
+  margin-bottom: 0;
+}
+
+.result-body {
+  background: rgba(255,252,240,0.95);
+  padding: 26px 24px 28px;
+}
+.result-desc {
+  font-size: 14px; line-height: 1.75;
+  color: var(--emerald);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(201,151,58,0.25);
+}
+.traits-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-bottom: 20px;
+}
+.trait-chip {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1.5px solid;
+}
+.fun-fact-box {
+  background: rgba(13,59,46,0.06);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.fun-fact-label {
+  font-size: 9px; font-weight: 800; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 5px;
+}
+.fun-fact-text {
+  font-size: 13px; color: var(--emerald); line-height: 1.6;
+  font-weight: 600;
+}
+
+.share-row {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
+.btn-share {
+  padding: 13px 28px;
+  border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 12px; font-weight: 800; letter-spacing: 2px;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  text-transform: uppercase;
+}
+.btn-share:hover { transform: translateY(-2px) scale(1.04); }
+.btn-again {
+  background: var(--emerald); color: var(--gold-bright);
+  box-shadow: 0 8px 24px rgba(13,59,46,0.3);
+}
+.btn-copy {
+  background: var(--crimson); color: white;
+  box-shadow: 0 8px 24px rgba(168,22,30,0.3);
+}
+
+/* Confetti */
+.confetti-piece {
+  position: fixed; top: -20px;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+  pointer-events: none; z-index: 5000;
+}
+@keyframes confettiFall {
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 36px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--emerald); color: var(--gold-bright);
+  padding: 11px 24px; border-radius: 50px;
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
+  z-index: 9000; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div id="bg">
+  <div class="sun-bg"></div>
+  <div class="cloud" style="width:160px;height:45px;top:22%;animation-duration:30s;animation-delay:-8s;opacity:0.6"></div>
+  <div class="cloud" style="width:100px;height:30px;top:14%;animation-duration:24s;animation-delay:-3s;opacity:0.45"></div>
+  <div class="cloud" style="width:220px;height:55px;top:32%;animation-duration:38s;animation-delay:-18s;opacity:0.35"></div>
+  <svg class="hills-svg" viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 220 L0 140 Q180 60 360 130 Q540 200 720 110 Q900 30 1080 120 Q1260 210 1440 130 L1440 220 Z" fill="rgba(13,59,46,0.16)"/>
+    <path d="M0 220 L0 170 Q200 110 400 160 Q600 210 800 155 Q1000 100 1200 160 Q1380 210 1440 175 L1440 220 Z" fill="rgba(13,59,46,0.28)"/>
+    <path d="M0 220 L0 195 Q300 165 600 190 Q900 215 1200 185 Q1360 172 1440 195 L1440 220 Z" fill="rgba(13,59,46,0.45)"/>
+    <!-- Trees -->
+    <line x1="100" y1="220" x2="96" y2="155" stroke="#3B2200" stroke-width="5"/>
+    <ellipse cx="89" cy="153" rx="22" ry="12" fill="#1A5C40" transform="rotate(-22 89 153)"/>
+    <ellipse cx="104" cy="148" rx="20" ry="10" fill="#2E7D32" transform="rotate(12 104 148)"/>
+    <line x1="1340" y1="220" x2="1337" y2="158" stroke="#3B2200" stroke-width="5"/>
+    <ellipse cx="1330" cy="157" rx="22" ry="12" fill="#1A5C40" transform="rotate(-18 1330 157)"/>
+    <ellipse cx="1345" cy="152" rx="20" ry="10" fill="#388E3C" transform="rotate(14 1345 152)"/>
+  </svg>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="site-header">
+    <div class="site-title">ERABADU 2026</div>
+    <div class="site-sub">AIESEC IN NIBM</div>
+  </div>
+
+  <!-- ════ INTRO SCREEN ════ -->
+  <div class="screen visible" id="screen-intro">
+
+    <div class="intro-badge">✦ Avurudu Personality Quiz ✦</div>
+
+    <h1 class="intro-title">Who Are You<br>This <span>Avurudu?</span></h1>
+    <p class="intro-sub">Discover your true Avurudu spirit — are you the master chef, the fearless competitor, or the village legend?</p>
+
+    <!-- Character preview -->
+    <div class="char-strip" id="charStrip">
+      <!-- filled by JS based on gender -->
+    </div>
+
+    <!-- Gender pick -->
+    <div class="gender-row">
+      <button class="gender-btn" id="btnF" onclick="pickGender('F')">
+        <span class="g-emoji">👩</span>Her Avurudu
+      </button>
+      <button class="gender-btn" id="btnM" onclick="pickGender('M')">
+        <span class="g-emoji">👨</span>His Avurudu
+      </button>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">✦ BEGIN THE JOURNEY ✦</button>
+  </div>
+
+  <!-- ════ QUIZ SCREEN ════ -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-card">
+      <div class="q-progress">
+        <div class="q-counter" id="qCounter">Q 1 / 8</div>
+        <div class="q-bar-outer"><div class="q-bar-inner" id="qBar" style="width:12.5%"></div></div>
+        <div class="q-counter" id="qPct">12%</div>
+      </div>
+      <div class="q-icon" id="qIcon">🌸</div>
+      <div class="q-text" id="qText">Loading...</div>
+      <div class="answers-grid" id="qAnswers"></div>
+    </div>
+  </div>
+
+  <!-- ════ RESULT SCREEN ════ -->
+  <div class="screen" id="screen-result">
+    <div class="result-wrap">
+      <div class="result-card" id="resultCard">
+        <div class="result-banner" id="resultBanner">
+          <span class="result-emoji-big" id="resEmoji"></span>
+          <div class="result-archetype" id="resArchetype"></div>
+          <div class="result-name" id="resName"></div>
+          <div class="result-title-sinhala" id="resSinhala"></div>
+        </div>
+        <div class="result-body">
+          <div class="result-desc" id="resDesc"></div>
+          <div class="traits-row" id="resTraits"></div>
+          <div class="fun-fact-box">
+            <div class="fun-fact-label">🌺 Fun Avurudu Fact</div>
+            <div class="fun-fact-text" id="resFact"></div>
+          </div>
+          <div class="share-row">
+            <button class="btn-share btn-copy" onclick="copyResult()">📋 Copy Result</button>
+            <button class="btn-share btn-again" onclick="resetQuiz()">🔄 Play Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  CHARACTERS
+// ══════════════════════════════════════════════
+const CHARS = {
+  F: [
+    {
+      id: 'kevum_queen',
+      emoji: '🍯',
+      archetype: 'The Sweet Legend',
+      name: 'Kevum Queen',
+      sinhala: 'කේවුම් රාජිනී',
+      color: '#A8161E',
+      textColor: 'white',
+      traitColors: ['#A8161E','#C9973A','#1A5C40'],
+      traits: ['Perfectionist','Warm-hearted','Patient','Creative'],
+      desc: 'You are the heartbeat of the Avurudu table. Hours before the sun rises, you are already in the kitchen, your hands dancing through rice flour and treacle. Your Kevum is not just food — it is love shaped into a perfect golden ring. Everyone knows: no feast is complete without YOU.',
+      fact: 'Kevum has been made in Sri Lanka for over 2,000 years. It is the first sweet placed on the Avurudu table as an offering to the gods before anyone else may eat.',
+    },
+    {
+      id: 'kolam_artist',
+      emoji: '🌸',
+      archetype: 'The Creative Soul',
+      name: 'Kolam Artist',
+      sinhala: 'කොලම් චිත්‍රිකා',
+      color: '#C4654A',
+      textColor: 'white',
+      traitColors: ['#C4654A','#C9973A','#A8161E'],
+      traits: ['Artistic','Detail-oriented','Spiritual','Graceful'],
+      desc: 'While others sleep, you are outside at dawn drawing the most intricate kolam pattern the village has ever seen. Each dot is placed with intention, each curve a prayer. You believe Avurudu begins not with fire or food, but with beauty drawn from the earth itself.',
+      fact: 'Kolam (floor art) is drawn at the entrance of homes during Avurudu to welcome prosperity and ward off negativity. The patterns carry ancient geometric symbolism.',
+    },
+    {
+      id: 'kana_queen',
+      emoji: '🏺',
+      archetype: 'The Fearless One',
+      name: 'Kana Mutti Queen',
+      sinhala: 'කාන මුට්ටි රාජිනී',
+      color: '#0D3B2E',
+      textColor: '#F0C060',
+      traitColors: ['#0D3B2E','#A8161E','#C9973A'],
+      traits: ['Competitive','Bold','Hilarious','Unstoppable'],
+      desc: 'Blindfolded, spinning, and somehow still finding the pot — that is YOUR superpower. You treat Kana Mutti less like a game and more like a personal mission. The crowd goes wild every single time. You have broken pots, broken records, and broken a few hearts too.',
+      fact: 'Kana Mutti originated as a test of spatial memory and courage. In ancient villages, it was believed that whoever broke the pot first would have the best harvest that year.',
+    },
+    {
+      id: 'kiri_amma',
+      emoji: '🥛',
+      archetype: 'The Auspicious One',
+      name: 'Kiri Amma',
+      sinhala: 'කිරි අම්මා',
+      color: '#C9973A',
+      textColor: 'white',
+      traitColors: ['#C9973A','#0D3B2E','#C4654A'],
+      traits: ['Nurturing','Traditional','Wise','Blessed'],
+      desc: 'You take the boiling of milk more seriously than most people take their careers. You know the exact auspicious minute, you have the clay pot ready, and you will not let anyone rush you. When the milk overflows to the east, you smile knowingly — this year will be good.',
+      fact: 'The direction the milk overflows during Kiri Ithireema (milk boiling ritual) is considered a sign — overflow to the east means prosperity, north means good luck in ventures.',
+    },
+    {
+      id: 'onchilla_queen',
+      emoji: '🎪',
+      archetype: 'The Free Spirit',
+      name: 'Onchilla Star',
+      sinhala: 'ඔංචිල්ල රාජිනී',
+      color: '#F4870A',
+      textColor: 'white',
+      traitColors: ['#F4870A','#A8161E','#0D3B2E'],
+      traits: ['Joyful','Carefree','Social','Magnetic'],
+      desc: 'The swing is where you are happiest — hair flying, laughter echoing through the coconut trees. You are the one everyone gathers around, the person whose energy makes the whole celebration feel alive. Avurudu without you is just a calendar date.',
+      fact: 'The Onchilla (traditional swing) game symbolises the swinging between the old year and the new. Whoever swings the highest is said to have the most joy in the coming year.',
+    },
+  ],
+  M: [
+    {
+      id: 'kotta_pora_king',
+      emoji: '🪵',
+      archetype: 'The Untouchable',
+      name: 'Kotta Pora King',
+      sinhala: 'කොට්ට පොර රජ',
+      color: '#0D3B2E',
+      textColor: '#F0C060',
+      traitColors: ['#0D3B2E','#A8161E','#C9973A'],
+      traits: ['Fearless','Athletic','Showman','Zero chill'],
+      desc: 'A greasy log ten feet in the air, a pillow in each hand, and absolutely no intention of falling — this is your natural habitat. You have trained for this moment all year. You read the log, you read your opponent, and then you send them flying into the crowd. Legend.',
+      fact: 'Kotta Pora (pillow fighting on a log) tests not just balance but psychological dominance. The log is often greased with coconut oil to make it nearly impossible to stand still.',
+    },
+    {
+      id: 'vel_vidane',
+      emoji: '🪁',
+      archetype: 'The Sharp One',
+      name: 'Vel Vidane',
+      sinhala: 'වේල් විදානේ',
+      color: '#A8161E',
+      textColor: 'white',
+      traitColors: ['#A8161E','#0D3B2E','#C4654A'],
+      traits: ['Strategic','Precise','Calm','Deadly accurate'],
+      desc: 'Where others see a game, you see geometry. The Banis (bun eating race) finish line, the Kana Mutti trajectory — it is all physics to you. You study the challenge before you move. Quiet but absolutely terrifying to compete against.',
+      fact: 'Many traditional Avurudu games were originally used to train young men in coordination, spatial awareness, and community teamwork during harvest season.',
+    },
+    {
+      id: 'kap_guardian',
+      emoji: '🌿',
+      archetype: 'The Protector',
+      name: 'Kap Guardian',
+      sinhala: 'කප් රකිනා',
+      color: '#1A5C40',
+      textColor: '#F0C060',
+      traitColors: ['#1A5C40','#C9973A','#C4654A'],
+      traits: ['Responsible','Grounded','Spiritual','Leader'],
+      desc: 'While everyone else is chasing fun, you are planting the Kap — the sacred post that marks the beginning of everything. You understand that celebration without ritual is hollow. You carry tradition not as a burden but as an honour. The village trusts you with the things that matter.',
+      fact: 'The Kap Situweema (planting of the ritual post) is one of the first acts of Avurudu. Only chosen members of the community are trusted to perform it at the exact auspicious hour.',
+    },
+    {
+      id: 'banis_champion',
+      emoji: '🍞',
+      archetype: 'The Hungry Legend',
+      name: 'Banis Champion',
+      sinhala: 'බනිස් වීරයා',
+      color: '#C9973A',
+      textColor: 'white',
+      traitColors: ['#C9973A','#A8161E','#0D3B2E'],
+      traits: ['Relentless','Funny','Competitive','Never full'],
+      desc: 'Hands tied behind your back, a bun dangling from a string, a crowd screaming your name — this is where you thrive. You have a gift: total focus in the most ridiculous situations. Nobody eats a hanging bun with more dignity and ferocity than you do.',
+      fact: 'The Banis (bun) eating race is one of the most beloved Avurudu games. Contestants race to eat buns hung from a string with their hands tied, which turns into absolute chaos and laughter.',
+    },
+    {
+      id: 'avurudu_maama',
+      emoji: '🎊',
+      archetype: 'The Soul of the Party',
+      name: 'Avurudu Maama',
+      sinhala: 'අවුරුදු මාමා',
+      color: '#C4654A',
+      textColor: 'white',
+      traitColors: ['#C4654A','#F4870A','#0D3B2E'],
+      traits: ['Legendary','Generous','Everywhere','Unforgettable'],
+      desc: 'You are the one who organised the games, brought the oil for the log, remembered the auspicious times, made sure the elders had chairs, AND still somehow won the tug of war. Avurudu exists in the village because of people like you. You are not just a person — you are an institution.',
+      fact: 'In traditional Sri Lankan villages, Avurudu celebrations were coordinated by a respected elder known as the "Gamarala" who ensured every ritual was performed at the correct auspicious time.',
+    },
+  ],
+};
+
+// ══════════════════════════════════════════════
+//  QUESTIONS — each answer maps to a character id
+// ══════════════════════════════════════════════
+const QUESTIONS = [
+  {
+    icon: '☀️',
+    text: 'It\'s the morning of Avurudu. What are you doing at 5 AM?',
+    answers: [
+      { emoji: '🍳', text: 'Already in the kitchen, elbow-deep in Kevum batter', F: 'kevum_queen', M: 'banis_champion' },
+      { emoji: '🎨', text: 'Drawing an elaborate kolam at the front door', F: 'kolam_artist', M: 'kap_guardian' },
+      { emoji: '😴', text: 'Absolutely asleep. The games start at 9, I\'ll be up by 8:58', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '🕯️', text: 'Making sure everything is set for the auspicious ritual hour', F: 'kiri_amma', M: 'kap_guardian' },
+    ]
+  },
+  {
+    icon: '🏺',
+    text: 'The Kana Mutti is hanging. You\'re blindfolded and spinning. What\'s your energy?',
+    answers: [
+      { emoji: '😤', text: 'LOCKED IN. I\'ve been training for this. The pot doesn\'t stand a chance.', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '😂', text: 'Completely lost and screaming. The crowd loves me though.', F: 'onchilla_queen', M: 'banis_champion' },
+      { emoji: '🧠', text: 'Counting my steps. I\'ve memorised the distance before I was blindfolded.', F: 'kolam_artist', M: 'vel_vidane' },
+      { emoji: '🙏', text: 'Praying quietly. I will either hit it or I won\'t. Fate decides.', F: 'kiri_amma', M: 'kap_guardian' },
+    ]
+  },
+  {
+    icon: '🥥',
+    text: 'Someone hands you a coconut. What do you do?',
+    answers: [
+      { emoji: '🧁', text: 'Scrape it immediately — I need it for my Kevum recipe', F: 'kevum_queen', M: 'banis_champion' },
+      { emoji: '🎨', text: 'Use it as inspiration for a kolam pattern', F: 'kolam_artist', M: 'vel_vidane' },
+      { emoji: '🪵', text: 'Grease the log with it for the pillow fight', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '🌿', text: 'Place it respectfully at the base of the Kap', F: 'kiri_amma', M: 'kap_guardian' },
+    ]
+  },
+  {
+    icon: '🎊',
+    text: 'What is your role at every family gathering?',
+    answers: [
+      { emoji: '👩‍🍳', text: 'The one in the kitchen making sure everyone is fed', F: 'kevum_queen', M: 'avurudu_maama' },
+      { emoji: '🎉', text: 'The one who makes sure everyone is having the time of their life', F: 'onchilla_queen', M: 'avurudu_maama' },
+      { emoji: '🏆', text: 'The one who turns every situation into a competition', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '📋', text: 'The one quietly making sure everything actually runs on time', F: 'kiri_amma', M: 'kap_guardian' },
+    ]
+  },
+  {
+    icon: '🌅',
+    text: 'Your perfect Avurudu memory involves...',
+    answers: [
+      { emoji: '🍯', text: 'The smell of Kevum frying and treacle caramelising at dawn', F: 'kevum_queen', M: 'banis_champion' },
+      { emoji: '🌸', text: 'A perfectly drawn kolam glistening in the morning dew', F: 'kolam_artist', M: 'kap_guardian' },
+      { emoji: '🎪', text: 'Swinging so high on the Onchilla you could almost touch the sun', F: 'onchilla_queen', M: 'avurudu_maama' },
+      { emoji: '💥', text: 'That one moment when the Kana Mutti EXPLODED and the crowd erupted', F: 'kana_queen', M: 'kotta_pora_king' },
+    ]
+  },
+  {
+    icon: '🎭',
+    text: 'Someone challenges you to a game. Your first instinct?',
+    answers: [
+      { emoji: '😏', text: 'Accept without hesitation. I was born for this.', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '🧐', text: 'Ask for 30 seconds to study the rules carefully', F: 'kolam_artist', M: 'vel_vidane' },
+      { emoji: '😂', text: 'Accept loudly, make a whole speech, get everyone hyped', F: 'onchilla_queen', M: 'avurudu_maama' },
+      { emoji: '🙏', text: 'Check if it clashes with any auspicious ritual timing first', F: 'kiri_amma', M: 'kap_guardian' },
+    ]
+  },
+  {
+    icon: '🌺',
+    text: 'What does Avurudu mean to you at its deepest level?',
+    answers: [
+      { emoji: '👨‍👩‍👧', text: 'Family. Everyone together. That warmth that only exists on this one day.', F: 'kiri_amma', M: 'avurudu_maama' },
+      { emoji: '🏅', text: 'Glory. The one time of year where skill and bravery are truly celebrated.', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '🎨', text: 'Heritage. A living thread connecting us to thousands of years of ancestors.', F: 'kolam_artist', M: 'kap_guardian' },
+      { emoji: '✨', text: 'Pure joy. No reason needed. It\'s just the happiest time of year.', F: 'onchilla_queen', M: 'banis_champion' },
+    ]
+  },
+  {
+    icon: '🏅',
+    text: 'Final question. How do you want to be remembered at this year\'s Avurudu?',
+    answers: [
+      { emoji: '🍰', text: '"The one whose Kevum everyone was fighting over"', F: 'kevum_queen', M: 'banis_champion' },
+      { emoji: '🌟', text: '"The one who made everything beautiful and meaningful"', F: 'kolam_artist', M: 'kap_guardian' },
+      { emoji: '💪', text: '"The one nobody could beat. Absolute legend."', F: 'kana_queen', M: 'kotta_pora_king' },
+      { emoji: '🎊', text: '"The one who made sure EVERYONE had the best time"', F: 'onchilla_queen', M: 'avurudu_maama' },
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let gender = null;
+let currentQ = 0;
+let scores = {};
+
+// ══════════════════════════════════════════════
+//  INIT CHAR STRIP
+// ══════════════════════════════════════════════
+function renderCharStrip(g) {
+  const list = g ? CHARS[g] : [...CHARS.F.slice(0,3), ...CHARS.M.slice(0,2)];
+  const strip = document.getElementById('charStrip');
+  strip.innerHTML = list.map(c => `
+    <div class="char-preview" style="border-color:${c.color}30">
+      <div class="char-emoji">${c.emoji}</div>
+      <div class="char-name-mini">${c.name}</div>
+    </div>
+  `).join('');
+}
+renderCharStrip(null);
+
+function pickGender(g) {
+  gender = g;
+  document.getElementById('btnF').classList.toggle('selected', g === 'F');
+  document.getElementById('btnM').classList.toggle('selected', g === 'M');
+  renderCharStrip(g);
+}
+
+// ══════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════
+function startQuiz() {
+  if(!gender) { showToast('Pick your Avurudu path first! 👆'); return; }
+  scores = {};
+  CHARS[gender].forEach(c => scores[c.id] = 0);
+  currentQ = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════════════
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+  const pct = Math.round(((currentQ + 1) / total) * 100);
+
+  document.getElementById('qCounter').textContent = `Q ${currentQ + 1} / ${total}`;
+  document.getElementById('qBar').style.width = pct + '%';
+  document.getElementById('qPct').textContent = pct + '%';
+  document.getElementById('qIcon').textContent = q.icon;
+
+  // Animate icon
+  const icon = document.getElementById('qIcon');
+  icon.style.animation = 'none';
+  void icon.offsetWidth;
+  icon.style.animation = 'bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+
+  document.getElementById('qText').textContent = q.text;
+
+  const grid = document.getElementById('qAnswers');
+  grid.innerHTML = q.answers.map((a, i) => `
+    <button class="ans-btn" onclick="pickAnswer(${i})">
+      <span class="ans-emoji">${a.emoji}</span>
+      <span>${a.text}</span>
+    </button>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════
+//  PICK ANSWER
+// ══════════════════════════════════════════════
+function pickAnswer(idx) {
+  // Highlight chosen
+  document.querySelectorAll('.ans-btn').forEach((b,i) => {
+    if(i === idx) b.classList.add('chosen');
+    b.onclick = null; // prevent double click
+  });
+
+  const a = QUESTIONS[currentQ].answers[idx];
+  const charId = a[gender];
+  if(scores[charId] !== undefined) scores[charId]++;
+
+  setTimeout(() => {
+    currentQ++;
+    if(currentQ < QUESTIONS.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }, 420);
+}
+
+// ══════════════════════════════════════════════
+//  SHOW RESULT
+// ══════════════════════════════════════════════
+function showResult() {
+  // Find winner
+  let topId = Object.keys(scores).reduce((a,b) => scores[a] >= scores[b] ? a : b);
+  const char = CHARS[gender].find(c => c.id === topId);
+
+  // Banner
+  const banner = document.getElementById('resultBanner');
+  banner.style.background = `linear-gradient(145deg, ${char.color}, ${char.color}cc)`;
+  banner.style.color = char.textColor;
+
+  document.getElementById('resEmoji').textContent = char.emoji;
+  document.getElementById('resArchetype').textContent = char.archetype;
+  document.getElementById('resArchetype').style.color = char.textColor;
+  document.getElementById('resName').textContent = char.name;
+  document.getElementById('resName').style.color = char.textColor;
+  document.getElementById('resSinhala').textContent = char.sinhala;
+  document.getElementById('resSinhala').style.color = char.textColor;
+
+  document.getElementById('resDesc').textContent = char.desc;
+  document.getElementById('resFact').textContent = char.fact;
+
+  // Traits
+  const traitsEl = document.getElementById('resTraits');
+  traitsEl.innerHTML = char.traits.map((t, i) => `
+    <span class="trait-chip" style="color:${char.traitColors[i % char.traitColors.length]};border-color:${char.traitColors[i % char.traitColors.length]}40;background:${char.traitColors[i % char.traitColors.length]}12">${t}</span>
+  `).join('');
+
+  showScreen('screen-result');
+  launchConfetti(char.color);
+}
+
+// ══════════════════════════════════════════════
+//  SCREEN SWITCHING
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('visible'));
+  const el = document.getElementById(id);
+  el.classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  gender = null;
+  document.getElementById('btnF').classList.remove('selected');
+  document.getElementById('btnM').classList.remove('selected');
+  renderCharStrip(null);
+  showScreen('screen-intro');
+}
+
+// ══════════════════════════════════════════════
+//  COPY RESULT
+// ══════════════════════════════════════════════
+function copyResult() {
+  if(!gender) return;
+  const scores2 = scores;
+  const topId = Object.keys(scores2).reduce((a,b) => scores2[a] >= scores2[b] ? a : b);
+  const char = CHARS[gender].find(c => c.id === topId);
+  const text = `🌺 My ERABADU 2026 Avurudu Personality:\n\n${char.emoji} ${char.name} (${char.sinhala})\n"${char.archetype}"\n\n${char.desc.slice(0,120)}...\n\n— AIESEC in NIBM | ERABADU 2026`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied! Share your spirit 🌺'));
+}
+
+// ══════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════
+function launchConfetti(accentColor) {
+  const colors = [accentColor, '#F0C060', '#FFFFFF', '#C4654A', '#FF8C38', '#A8161E'];
+  for(let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const size = 8 + Math.random() * 10;
+      el.style.cssText = `
+        left:${Math.random()*100}vw;
+        width:${size}px; height:${size * (0.5 + Math.random())}px;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration:${2 + Math.random()*2.5}s;
+        animation-delay:${Math.random()*0.8}s;
+        opacity:${0.7 + Math.random()*0.3};
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 30);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html
