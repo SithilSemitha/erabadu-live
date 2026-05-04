@@ -3,7 +3,7 @@
 A simple HTML-based live view project.
 
 ## 🚀 Live Demo
-[View the live project here](https://erabadu-live-xzdo.vercel.app)
+[View the live project here](https://erabadu-live3.vercel.app/)
 
 ## 🛠️ Technologies
 - HTML
